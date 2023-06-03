@@ -5,7 +5,6 @@ const config = require('../app.config');
 class WP_Config {
 	constructor() {
 		this.pid	= null;
-		this.path = null;
 		this.path_config = null;
 		this.path_sample = null;
 	}
@@ -108,23 +107,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once ABSPATH . 'wp-settings.php';`;
 
 	}
-	async setConfig(pid, pathProj) {
+	async setConfig(pid) {
 		this.pid = pid;
-		this.path = pathProj;
 		this.path_config = path.join(process.cwd(), `${this.pid}`, 'wp-config.php');
 		this.path_sample = path.join(process.cwd(), `${this.pid}`, 'wp-config-sample.php');
-		// TO DELETE START
-		console.log('Create Folder');
-		fs.mkdirSync(this.path);
-		console.log('Folder Created');
-		// TO DELETE END
 		const data = {};
 		data.database = this.pid;
 		data.username = config.database_user;
 		data.password = config.database_pass;
 		fs.writeFileSync(this.path_config, this.configFile(data));
-
-
+		fs.unlinkSync(this.path_sample);
 	}
 }
 module.exports = WP_Config;

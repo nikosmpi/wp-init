@@ -11,10 +11,10 @@ class WP_Init {
 	async run() {
 		this.pid = prompt('Give the name of the project:');
 		this.path = path.join(process.cwd(), this.pid);
-		//const downloadWp = new WP_Download();
-		//downloadWp.downloadWordPress(this.pid, this.path);
+		const downloadWp = new WP_Download();
+		await downloadWp.downloadWordPress(this.pid, this.path);
 		const configWp = new WP_Config();
-		configWp.setConfig(this.pid, this.path);
+		configWp.setConfig(this.pid);
 	}
 }
 
