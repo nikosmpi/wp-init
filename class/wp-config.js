@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('../app.config');
+const crypto = require('crypto');
 
 class WP_Config {
 	constructor() {
@@ -31,16 +32,16 @@ class WP_Config {
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', '${data.database}' );
+define( 'DB_NAME', '${data.base}' );
 
 /** Database username */
-define( 'DB_USER', '${data.username}' );
+define( 'DB_USER', '${data.user}' );
 
 /** Database password */
-define( 'DB_PASSWORD', '${data.password}' );
+define( 'DB_PASSWORD', '${data.pass}' );
 
 /** Database hostname */
-define( 'DB_HOST', 'localhost' );
+define( 'DB_HOST', '${data.host}' );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
@@ -59,14 +60,14 @@ define( 'DB_COLLATE', '' );
  *
  * @since 2.6.0
  */
-define( 'AUTH_KEY',         'put your unique phrase here' );
-define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
-define( 'LOGGED_IN_KEY',    'put your unique phrase here' );
-define( 'NONCE_KEY',        'put your unique phrase here' );
-define( 'AUTH_SALT',        'put your unique phrase here' );
-define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
-define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
-define( 'NONCE_SALT',       'put your unique phrase here' );
+define( 'AUTH_KEY',         '${crypto.randomBytes(20).toString('hex')}' );
+define( 'SECURE_AUTH_KEY',  '${crypto.randomBytes(20).toString('hex')}' );
+define( 'LOGGED_IN_KEY',    '${crypto.randomBytes(20).toString('hex')}' );
+define( 'NONCE_KEY',        '${crypto.randomBytes(20).toString('hex')}' );
+define( 'AUTH_SALT',        '${crypto.randomBytes(20).toString('hex')}' );
+define( 'SECURE_AUTH_SALT', '${crypto.randomBytes(20).toString('hex')}' );
+define( 'LOGGED_IN_SALT',   '${crypto.randomBytes(20).toString('hex')}' );
+define( 'NONCE_SALT',       '${crypto.randomBytes(20).toString('hex')}' );
 
 /**#@-*/
 
@@ -112,10 +113,13 @@ require_once ABSPATH . 'wp-settings.php';`;
 		this.path_config = path.join(process.cwd(), `${this.pid}`, 'wp-config.php');
 		this.path_sample = path.join(process.cwd(), `${this.pid}`, 'wp-config-sample.php');
 		const data = {};
-		data.database = this.pid;
-		data.username = config.database_user;
-		data.password = config.database_pass;
+		data.base = this.pid;
+		data.host = config.database_host;
+		data.user = config.database_user;
+		data.pass = config.database_pass;
+		console.log('Create Config File');
 		fs.writeFileSync(this.path_config, this.configFile(data));
+		console.log('Delete Sample Config');
 		fs.unlinkSync(this.path_sample);
 	}
 }

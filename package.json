@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "build": "pkg app.js --targets node16-win-x64"
+    "build": "pkg app.js --targets node16-win-x64 -o wp-init.exe"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "adm-zip": "^0.5.10",
     "download": "^8.0.0",
     "ejs": "^3.1.9",
+    "mysql2": "^3.3.3",
     "prompt-sync": "^4.2.0"
   }
 }
