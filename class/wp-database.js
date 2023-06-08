@@ -9,14 +9,14 @@ class WP_Database {
 	async setNewDatabase(pid) {
 		this.pid = pid;
 		console.log('Connection to MySQL');
-		this.connection = mysql.createConnection({
+		this.connection = await mysql.createConnection({
 			user: config.database_user,
 			password: config.database_pass,
 			host: config.database_host,
 		});
 		console.log('Create Database');
 		const sqlQuery = `CREATE DATABASE IF NOT EXISTS ${this.pid} COLLATE utf8_general_ci;`;
-		await this.connection.execute(sqlQuery);
+		 const [rows, fields] = await this.connection.promise().query(sqlQuery);
 		await this.connection.end();
 		console.log('Database Created');
 	}
